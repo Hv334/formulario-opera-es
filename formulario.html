@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Formulário com Supabase e Geolocalização</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5a623;
+      padding: 20px;
+      max-width: 480px;
+      margin: 0 auto;
+      color: #333;
+    }
+    form {
+      background-color: #fff;
+      padding: 25px 30px;
+      border-radius: 8px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    input[type="text"], select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    #mensagem {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+</head>
+<body>
+
+  <h2>Formulário de Entrada de Dados</h2>
+
+  <form id="formEntrada">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" required />
+
+    <label for="matricula">Matrícula:</label>
+    <input type="text" id="matricula" name="matricula" required />
+
+    <label for="gerencia">Gerência:</label>
+    <select id="gerencia" name="gerencia" required>
+      <option value="" disabled selected>Selecione a gerência</option>
+      <option value="Gerência de limpeza urbana e ajardinamento">Gerência de limpeza urbana e ajardinamento</option>
+      <option value="Gerência de Poda e Extirpação">Gerência de Poda e Extirpação</option>
+      <option value="Gerência de obras">Gerência de obras</option>
+    </select>
+
+    <label for="ponto_de_apoio">Ponto de Apoio:</label>
+    <input type="text" id="ponto_de_apoio" name="ponto_de_apoio" required />
+
+    <label for="turno">Turno:</label>
+    <input type="text" id="turno" name="turno" required />
+
+    <label for="funcao">Função:</label>
+    <select id="funcao" name="funcao" required>
+      <option value="" disabled selected>Selecione a função</option>
+      <option value="Operador">Operador</option>
+      <option value="Supervisor">Supervisor</option>
+      <option value="Técnico">Técnico</option>
+      <option value="Gerente">Gerente</option>
+      <option value="Outro">Outro</option>
+    </select>
+
+    <label for="epi">EPI:</label>
+    <select id="epi" name="epi" required>
+      <option value="" disabled selected>Selecione o EPI</option>
+      <option>AVENTAL PROTECAO COURO</option>
+      <option>AVENTAL TECIDO IMPERMEAVEL PEQUENO</option>
+      <option>BONE TECIDO BRIM CINZA</option>
+      <option>BONE TECIDO POLYBRIM TIPO ARABE COR AZUL CLARO</option>
+      <option>BONE TECIDO POLYBRIM TIPO ARABE COR BRANCO</option>
+      <option>BONE TECIDO POLYBRIM TIPO ARABE COR CINZA</option>
+      <option>BONE TECIDO POLYBRIM TIPO ARABE COR LARANJA</option>
+      <option>BONE TECIDO POLYBRIM TIPO ARABE COR VERDE</option>
+      <option>BOTA PVC  CANO LONGO, COR PRETA NR 39</option>
+      <option>BOTA PVC  CANO LONGO, COR PRETA NR 40</option>
+      <option>BOTA PVC  CANO LONGO, COR PRETA NR 41</option>
+      <option>BOTA PVC  CANO LONGO, COR PRETA NR 42</option>
+      <option>BOTA PVC  CANO LONGO, COR PRETA NR 44</option>
+      <option>BOTA PVC  CANO LONGO, COR PRETA NR 45</option>
+      <option>BOTA PVC BRANCA CANO LONGO PALMILHA E BIQUEIRA ACO</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 38</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 39</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 40</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 41</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 42</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 43</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 44</option>
+      <option>BOTA PVC CANO LONGO, COR BRANCA NR 45</option>
+      <option>BOTA PVC CANO LONGO, COR PRETA NR 38</option>
+      <option>BOTA PVC PRETA CANO LONGO PALMILHA E BIQUEIRA ACO</option>
+      <option>BOTINA COURO CANO CURTO VAQUETA PRIMEIRA QUALIDADE</option>
+      <option>BOTINA COURO SEGURANCA NR 35</option>
+      <option>BOTINA COURO SEGURANCA NR 37</option>
+      <option>BOTINA COURO SEGURANCA NR 38</option>
+      <option>BOTINA COURO SEGURANCA NR 39</option>
+      <option>BOTINA COURO SEGURANCA NR 44</option>
+      <option>BOTINA COURO SEGURANCA NR 42</option>
+      <option>BOTINA COURO SEGURANCA PALMILHA E BIQUEIRA ACO NR</option>
+      <option>CALCA PVC PROTECAO G</option>
+      <option>CALCA PVC PROTECAO M</option>
+      <option>CALCA SEGURANCA NYLON 8 CAMADAS PROTECAO TAMANHO E</option>
+      <option>CALCA SEGURANCA NYLON 8 CAMADAS PROTECAO TAMANHO G</option>
+      <option>CALCA SEGURANCA POLIESTER 8 CAMADAS PROTECAO P/ OP</option>
+      <option>CALCA TECIDO POLYBRIM COR AZUL ROYAL EXG</option>
+      <option>CALCA TECIDO POLYBRIM COR AZUL ROYAL G</option>
+      <option>CALCA TECIDO POLYBRIM COR AZUL ROYAL M</option>
+      <option>CALCA TECIDO POLYBRIM COR AZUL ROYAL P</option>
+      <option>CALCA TECIDO POLYBRIM COR VERDE P</option>
+      <option>CAMISETA MALHA PV, MANGA LONGA, 170G/M2, ANTI-PEEL</option>
+      <option>CAPACETE PLASTICO PROTECAO AZUL</option>
+      <option>CAPACETE PLASTICO PROTECAO VERDE</option>
+      <option>CAPACETE PROTETOR FLORESTAL COM PROTECAO FACIAL E</option>
+      <option>CARTAO PONTO CONTROLE FUNCIONAL</option>
+      <option>CINTA POLIESTER TIPO SLING, CAPACIDADE ELEVACAO 60</option>
+      <option>CINTO SEGURANCA PARA-QUEDISTA</option>
+      <option>CONJUNTO PROTECAO APLICACAO VENENO G</option>
+      <option>CONJUNTO PROTECAO APLICACAO VENENO GG</option>
+      <option>CONJUNTO PROTECAO APLICACAO VENENO M</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 36</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 37</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 38</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 39</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 40</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 44</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 45</option>
+      <option>COTURNO SEGURANCA COURO CANO LONA 20CM NR 46</option>
+      <option>LENTE MASCARA SOLDA CARBOGRAFITE BRANCA</option>
+      <option>LUVA BORRACHA LATEX CANO MEDIO TAMANHO M</option>
+      <option>LUVA MALHA ANTIDERRAPANTE</option>
+      <option>LUVA NITRILICA GRANDE</option>
+      <option>LUVA NITRILICA MEDIO</option>
+      <option>LUVA NITRILICA PEQUENO</option>
+      <option>LUVA SEGURANCA LATEX CANO LONGO AMARELA G</option>
+      <option>LUVA SEGURANCA LATEX CANO LONGO AMARELA M</option>
+      <option>LUVA SEGURANCA LATEX CANO LONGO AMARELA P</option>
+      <option>LUVA SEGURANCA NITRILICA CANO LONGO M</option>
+      <option>LUVA SEGURANCA NITRILICA CANO LONGO P</option>
+      <option>LUVA TRICOTADA 4 FIOS</option>
+      <option>LUVA TRICOTADA REVESTIDA EM LATEX CANO CURTO</option>
+      <option>LUVA VAQUETA COBERTURA ALTA TENSAO</option>
+      <option>OCULOS SEGURANCA POLICARBONATO C/ LENTES INCOLORES</option>
+      <option>PROTETOR AURICULAR SILICONE</option>
+      <option>PROTETOR AURICULAR TIPO CONCHA</option>
+      <option>PROTETOR FACIAL AJUSTAVEL</option>
+      <option>RESPIRADOR CARVAO ATIVADO UM FILTRO</option>
+      <option>SAPATO SEGURANCA CONFECCIONADO EM VAQUETA, COR PRE</option>
+      <option>SAPATO SEGURANCA PRETO COURO FECHAMENTO CADARSO NR</option>
+      <option>CRAVO DE SEGURANCA</option>
+      <option>CREME PARA MAOS</option>
+      <option>ESCOVA DENTAL</option>
+      <option>ESCOVA P/ LIMPEZA DE BOTINA</option>
+      <option>ESPUMA PROTETORA P/ ORELHA</option>
+      <option>FILTRO P/ RESPIRADOR</option>
+      <option>LUVA BORRACHA RASPA DE COURO TAMANHO P</option>
+      <option>LUVA BORRACHA RASPA DE COURO TAMANHO M</option>
+      <option>LUVA BORRACHA RASPA DE COURO TAMANHO G</option>
+      <option>LUVA DE COURO VAQUETA TAMANHO P</option>
+      <option>LUVA DE COURO VAQUETA TAMANHO M</option>
+      <option>LUVA DE COURO VAQUETA TAMANHO G</option>
+    </select>
+
+    <label for="horario_entrada">Horário de Entrada:</label>
+    <input type="time" id="horario_entrada" name="horario_entrada" required />
+
+    <label for="horario_saida">Horário de Saída:</label>
+    <input type="time" id="horario_saida" name="horario_saida" required />
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <p id="mensagem"></p>
+
+  <script>
+    // Inicializa Supabase
+    const supabaseUrl = 'https://ksgzrunzmovcqphgpmkv.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtzZ3pydW56bW92Y3FwaG1rdiIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzQ4ODc5OTUwLCJleHAiOjIwNjQ0NTU5NTB9.k5KMCzB9g4fzQGcLKnC7xZMab8URq_Igqz_yy-197zQ';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    const form = document.getElementById('formEntrada');
+    const mensagem = document.getElementById('mensagem');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      mensagem.textContent = 'Obtendo localização...';
+
+      if (!navigator.geolocation) {
+        mensagem.textContent = 'Geolocalização não suportada pelo navegador.';
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        mensagem.textContent = 'Enviando dados...';
+
+        const data = {
+          nome: form.nome.value,
+          matricula: form.matricula.value,
+          gerencia: form.gerencia.value,
+          ponto_de_apoio: form.ponto_de_apoio.value,
+          turno: form.turno.value,
+          funcao: form.funcao.value,
+          epi: form.epi.value,
+          horario_entrada: form.horario_entrada.value,
+          horario_saida: form.horario_saida.value,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          data_cadastro: new Date().toISOString()
+        };
+
+        const { error } = await supabase
+          .from('entradas')
+          .insert([data]);
+
+        if (error) {
+          mensagem.textContent = 'Erro ao enviar dados: ' + error.message;
+          return;
+        }
+
+        mensagem.textContent = 'Dados enviados com sucesso!';
+
+        form.reset();
+      }, (error) => {
+        mensagem.textContent = 'Erro ao obter localização: ' + error.message;
+      });
+    });
+  </script>
+
+</body>
+</html>
